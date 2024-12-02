@@ -1,0 +1,157 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="profile content">
+    <div class="content-header">
+        <img src="/res/sample-profile-pic.jpg" class="profile-pic">
+        <h2><%= author.fullName %></h2>
+    </div>
+    <div class="content-tabs">
+        <a href="@<%- author.username %>" class="<%= !tab ? "active" : "" %>">Home</a>
+        <% if(res.isAuthor){ %>
+            <a href="/@<%- author.username %>?tab=drafts" class="<%= tab && tab === "drafts" ? "active" : "" %>">Drafts</a>
+        <% } %>
+        <a href="/@<%- author.username %>?tab=about" class="<%= tab && tab === "about" ? "active" : "" %>">About</a>
+        <% if(res.isAuthor){ %>
+            <a href="/@<%- author.username %>?tab=followers" class="<%= tab && tab === "followers" ? "active" : "" %>">Followers</a>
+            <a href="/@<%- author.username %>?tab=following" class="<%= tab && tab === "following" ? "active" : "" %>">Following</a>
+        <% } %>
+        <% if(res.isAuthor){ %><a class="text-tab" href="/me/settings?q=profile">Edit Profile <span class="material-symbols-outlined">edit</span></a><% } %>
+    </div>
+    <% if(!tab){ %>
+        <div class="profile-section">
+            <p class="author-bio"><%= author.bio %></p>
+        </div>
+        <div class="profile-section">
+            <div class="profile-section-title">Stories</div>
+            <% if(blogs.length == 0){ %>
+                <p>Your stories will appear here.</p>
+            <% } %>
+            <div>
+            <% blogs && blogs.map((blog) => { %>
+                <div class="blog">
+                    <p class="author"><a href="/@<%= blog.author.username %>"><img src="/res/sample-profile-pic.jpg" class="profile-pic"><%= blog.author.fullName %></a></p>
+                    <h3><a href="/blogs/<%= blog.slug %>"><%= blog.title %></a></h3>
+                    <p class="snippet"><%= blog.snippet %></p>
+                    <p class="options">
+                        <span class="timestamp">
+                            <% if(new Date(blog.createdAt) < new Date(blog.updatedAt)){ %>
+                                (edited)
+                            <% } %>
+                            <%= blog.timestamp %>
+                        </span>
+                        <span>
+                            <%= blog?.readTime %>
+                        </span>
+                    </p>
+                </div>
+            <% }) %>
+            </div>
+        </div>
+        <div class="pagination">
+            <div>
+                <% if ( nextPage ) { %>
+                <a href="/@<%- author.username %>?p=<%= nextPage %>"><i class="fa-solid fa-chevron-left"></i> Older Posts</a>
+                <% } %>
+            </div>
+            <div>
+                <% if ( prevPage ) { %>
+                    <a href="/@<%- author.username %>?p=<%= prevPage %>">Latest Posts <i class="fa-solid fa-chevron-right"></i></a>
+                <% } %>
+            </div>
+        </div>
+    <% } else if(tab === "drafts"){ %>
+        <div class="profile-section">
+            <div class="profile-section-title">Drafts</div>
+            <% if(blogs.length == 0){ %>
+                <p>Your drafts will appear here.</p>
+            <% } %>
+            <div>
+            <% blogs && blogs.map((blog) => { %>
+                <div class="blog">
+                    <p class="author"><a href="/@<%= blog.author.username %>"><img src="/res/sample-profile-pic.jpg" class="profile-pic"><%= blog.author.fullName %></a></p>
+                    <h3><a href="/blogs/edit/<%= blog.slug %>"><%= blog.title %></a></h3>
+                    <p class="snippet"><%= blog.snippet %></p>
+                    <p class="options">
+                        <span class="timestamp">
+                            <% if(new Date(blog.createdAt) < new Date(blog.updatedAt)){ %>
+                                (edited)
+                            <% } %>
+                            <%= blog.timestamp %>
+                        </span>
+                        <span>
+                            <%= blog?.readTime %>
+                        </span>
+                    </p>
+                </div>
+            <% }) %>
+            </div>
+        </div>
+        <div class="pagination">
+            <div>
+                <% if ( nextPage ) { %>
+                <a href="/@<%- author.username %>?tab=draft&p=<%= nextPage %>"><i class="fa-solid fa-chevron-left"></i> Older Posts</a>
+                <% } %>
+            </div>
+            <div>
+                <% if ( prevPage ) { %>
+                    <a href="/@<%- author.username %>?tab=drafts&p=<%= prevPage %>">Latest Posts <i class="fa-solid fa-chevron-right"></i></a>
+                <% } %>
+            </div>
+        </div>
+    <% } else if(tab === "about"){ %>
+        <div class="profile-section">
+            <p>Whimsical member since <%= new Date(author.createdAt).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' }) %>.</p>
+            <p class="about-author-count"><%= author.followers.length %> followers <span class="dot">•</span> <%= author.following.length %> following</p>
+            <% if(author.socials.twitter || author.socials.facebook || author.socials.instagram || author.socials.linkedin){ %>
+                <p class="about-author-connect">Connect with <%= author.fullName %>
+                    <% if(author.socials.twitter){ %><a href="<%= author.socials.twitter %>">twitter</a> <% } %>
+                    <% if(author.socials.facebook){ %><a href="<%= author.socials.facebook %>">facebook</a> <% } %>
+                    <% if(author.socials.instagram){ %><a href="<%= author.socials.instagram %>">instagram</a> <% } %>
+                    <% if(author.socials.linkedin){ %><a href="<%= author.socials.linkedin %>">linkedin</a> <% } %>
+                </p>
+            <% } %>
+        </div>
+    <% } else if(tab === "followers"){ %>
+        <div class="profile-section">
+            <div class="profile-section-title"><%= followers.length %> Followers</div>
+            <% if(followers.length == 0){ %>
+                <p>Your followers will appear here.</p>
+            <% } %>
+            <div class="followers">
+                <% followers && followers.map((follower) => { %>
+                    <div class="user">
+                        <img src="/res/sample-profile-pic.jpg" class="user-profile-pic">
+                        <div class="user-info">
+                            <p class="user-info-name"><a href="/@<%= follower.username %>"><%= follower.fullName %></a></p>
+                            <p class="user-info-bio"><%= follower.bio %></p>
+                        </div>
+                        <div class="user-action">
+                            <button>follow</button>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    <% } else if(tab === "following"){ %>
+        <div class="profile-section">
+            <div class="profile-section-title"><%= following.length %> Following</div>
+            <% if(following.length == 0){ %>
+                <p>Your followings will appear here.</p>
+            <% } %>
+            <div class="following">
+                <% following && following.map((follow) => { %>
+                    <div class="user">
+                        <img src="/res/sample-profile-pic.jpg" class="user-profile-pic">
+                        <div class="user-info">
+                            <p class="user-info-name"><a href="/@<%= follow.username %>"><%= follow.fullName %></a></p>
+                            <p class="user-info-bio"><%= follow.bio %></p>
+                        </div>
+                        <div class="user-action user-action-undo">
+                            <button>Unfollow</button>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    <% } %>
+</div>

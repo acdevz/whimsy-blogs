@@ -1,0 +1,77 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="edit-blog content">
+    <form class="edit-blog-form" action="/blogs/edit" method="POST">
+        <h2>Share a Story</h2>
+        <input type="hidden" name="_id" value="<%= blog._id %>">
+        <input type="text" class="input-title" name="title" placeholder="Title" value="<%= blog.title %>" autofocus>
+        <input type="text" class="input-snippet" name="snippet" placeholder="Excerpt" value="<%= blog.snippet %>">
+        <textarea class="textarea-content"></textarea>
+        <input type="hidden" class="input-processed-content" name="content" value="<%= blog.content %>">
+        <input type="hidden" class="input-status" name="status">
+        <% if(res.user.subscription.subscriptionType === "premium"){ %>
+            <div class="input-checkbox">
+                <input type="checkbox" name="premium">Premium ✨
+            </div>
+        <% } %>
+        <button class="submit-btn publish-btn" disabled>Publish</button>
+        <button class="submit-btn draft-btn" disabled>Save Draft</button>
+    </form>
+</div>
+
+<script>
+    const editBlogForm = document.querySelector('.edit-blog-form');
+    const title = editBlogForm.querySelector('.input-title');
+    const snip = editBlogForm.querySelector('.input-snippet');
+    const body = editBlogForm.querySelector('.textarea-content');
+    const status = editBlogForm.querySelector('.input-status');
+    const publishBtn = editBlogForm.querySelector('.publish-btn');
+    const draftBtn = editBlogForm.querySelector('.draft-btn');
+    const blogProcessed = editBlogForm.querySelector('.input-processed-content');
+
+    body.innerHTML = blogProcessed.value.replace(/<br>/g, '\n');
+    body.style.height = body.scrollHeight + 'px';
+    body.addEventListener('input', (e) => {
+        body.style.height = body.scrollHeight + 'px';
+    });
+
+    editBlogForm.addEventListener('submit', () => {
+        blogProcessed.value = body.value.replace(/\n/g, '<br>');
+    });
+    publishBtn.addEventListener('click', () => {
+        status.value = 'published';
+        editBlogForm.submit();
+    })
+    draftBtn.addEventListener('click', () => {
+        status.value = 'draft';
+        editBlogForm.submit();
+    })
+
+    title.addEventListener('input', () => {
+        title.value ? title.value = title.value.toLowerCase().replace(/\b\w/g, s => s.toUpperCase()) : "";
+    });
+
+    snip.addEventListener('input', () => {
+        snip.value ? snip.value = sentenceCase(snip.value) : "";
+    });
+
+    editBlogForm.addEventListener('input', () => {
+        if (title.value && snip.value && body.value) {
+            publishBtn.removeAttribute('disabled');
+        }
+        else {
+            publishBtn.setAttribute('disabled', 'disabled');
+        }
+        if (title.value) {
+            draftBtn.removeAttribute('disabled');
+        }
+        else {
+            draftBtn.setAttribute('disabled', 'disabled');
+        }
+    });
+    function sentenceCase(str) {
+        return str.replace(/(^|\.\s+)([a-z])/g, (match, group1, group2) => {
+            return group1 + group2.toUpperCase();
+        });
+    }
+</script>

@@ -1,0 +1,188 @@
+body{
+    padding: 180px 0 0;
+}
+
+/* :::::::::::::::::general::::::::::::::::: */
+
+h2{
+    font-size: 2rem;
+    margin: 2rem 0;
+}
+h3{
+    font-size: 1rem;
+}
+
+/* :::::::::::::::::header::::::::::::::::: */
+
+.nav{
+    height: 180px;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 0.5rem 0;
+}
+.site-title > h1{
+    font-size: 2.5rem;
+}
+.site-title > p{
+    text-align: center;
+}
+.site-links{
+    background-color: #f5f5f5;
+    width: 100%;
+    height: 50px;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.site-links > a{
+    font-size: 1rem;
+    margin: 0;
+}
+.site-links .signin-btn,
+.site-links .profile-btn{
+    padding: 0.5rem;
+}
+.profile-menu{
+    height: fit-content;
+    margin: 0;
+}
+
+/* :::::::::::::::sticky nav:::::::::::::::: */
+
+.nav-sticky{
+    height: auto;
+}
+.nav-sticky .site-links{
+    height: 40px;
+}
+.nav-sticky .site-title > h1{
+    font-size: 1.5rem;
+}
+.nav-sticky .signin-btn,
+.nav-sticky .profile-btn{
+    padding: 0.25rem 0.5rem;
+}
+
+/* :::::::::::::::::content::::::::::::::::: */
+
+.content{
+    max-width: 100%;
+    padding: 1rem;
+}
+.content-header{
+    flex-direction: column;
+    align-items: flex-start;
+}
+.content-header h2{
+    margin: 0;
+    order: 2;
+}
+.search-form{
+    width: calc(100%);
+    margin:  1rem 0 2.5rem;
+    padding: 0 1.5rem;
+}
+.search-bar{
+    width: 100%;
+}
+.match-count-header{
+    font-family: var(--body);
+    font-size: 1.2rem;
+}
+.blog{
+    padding: 1rem;
+}
+.blogs h2::after, .about h2::after, .search h2::after, .profile h2::after, .signin h2::after, .signup h2::after{
+    width: 50px;
+}
+.blog h3{
+    font-size: 1.25rem;
+    line-height: 1.2;
+}
+.timestamp{
+    top: unset;
+    bottom: 0;
+    right: 0;
+    margin: 1rem;
+    font-size: 1rem;
+}
+.content p {
+    line-height: 1.5;
+}
+.content .snippet{
+    margin-bottom: 2.5rem;
+    line-height: 1.2;
+}
+.about{
+    padding: 1rem;
+}
+.posts{
+    padding: 4rem 1rem 2.5rem;
+}
+.posts h2{
+    font-size: 1.75rem;
+}
+.posts .author-container{
+    padding: 0.5rem;
+}
+.posts .author-container .author{
+    font-size: 1.2rem;
+}
+.posts .author-container .date{
+    font-size: 1rem;
+}
+.create-blog input,
+.create-blog textarea,
+.edit-blog input,
+.edit-blog textarea,
+.form-elements input{
+    padding: 1rem;
+}
+.create-blog input:hover,
+.create-blog textarea:hover,
+.create-blog input:focus,
+.create-blog textarea:focus,
+.edit-blog input:hover,
+.edit-blog textarea:hover,
+.edit-blog input:focus,
+.edit-blog textarea:focus{
+    border-left: 4px solid #000;
+}
+.create-blog input#title, .edit-blog input#title{
+    font-size: 1.5rem;
+}
+.create-blog input#snippet, .edit-blog input#snippet{
+    font-size: 1rem;
+}
+.create-blog #body, .edit-blog #body{
+    font-size: 1rem;
+}
+.create-blog textarea, .edit-blog textarea{
+    height: 300px;
+}
+.form{
+    flex-direction: column;
+}
+.form-elements{
+    width: 100%;
+}
+.form-elements label{
+    font-size: 1.2rem;
+}
+.form-elements .error-msg{
+    font-size: 1rem;
+}
+.form-illus{
+    width: 80% !important;
+    height: 300px !important;
+}
+.signin h2, .signup h2{
+    margin-left: 0;
+}
+
+/* :::::::::::::::::footer::::::::::::::::: */
+
+footer{
+    margin-top: 2rem;
+}

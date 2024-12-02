@@ -1,0 +1,126 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="posts content">
+    <h2><%= blog.title %></h2>
+
+    <div class="author-container">
+      <!-- src="//author.profilePic//" -->
+      <img src="/res/sample-profile-pic.jpg" alt="<%= blog.author.fullName %>" class="profile-pic">
+      <div>
+        <p class="author"><a href="/@<%= blog.author.username %>"><%= blog.author.fullName %></a>
+
+          <% if(res.user?._id.toString() != blog.author.userId.toString() && !res.user?.following.find(authorId => authorId.toString() == blog.author.userId.toString())){ %>
+            <span class="dot">•</span><a class="author-follow-btn">follow</a></p>
+          <% } else if(res.user?._id.toString() != blog.author.userId.toString()) { %>
+            <span class="dot">•</span><a class="author-follow-btn">following</a></p>
+          <% } %>
+
+        <p class="date"><%= new Date(blog.createdAt).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) %><span class="dot">•</span><%= blog.readTime %></p>
+      </div>
+    </div>
+
+    <div class="posts-options">
+      <div class="posts-options-left">
+        <button class="posts-options-likes"><span class="material-symbols-outlined">thumb_up</span></button>
+        <% if(blog.likes.length > 0){ %>
+          <span class="posts-options-count likes-count"><%= blog.likes.length %></span>
+        <% } %>
+        <button class="posts-options-comments"><span class="material-symbols-outlined">forum</span></button>
+        <% if(blog.comments.length > 0){ %>
+          <span class="posts-options-count comments-count"><%= blog.comments.length %></span>
+        <% } %>
+      </div>
+      <div class="posts-options-right">
+        <button class="save-btn"><span class="material-symbols-outlined">bookmark_add</span></button>
+        <% if(res.user && res.isAuthor) { %>
+          <a href="/blogs/edit/<%= blog.slug %>"><button class="edit-btn"><span class="material-symbols-outlined">edit</span></button></a>
+          <button class="delete-btn" data-doc="<%= blog._id %>"><span class="material-symbols-outlined">ink_eraser</span></button>
+        <% } %>
+      </div>
+    </div>
+
+    <p class="body"><%- blog.content %></p>
+
+    <div class="posts-options">
+      <div class="posts-options-left">
+        <button class="posts-options-likes"><span class="material-symbols-outlined">thumb_up</span></button>
+        <% if(blog.likes.length > 0){ %>
+          <span class="posts-options-count likes-count"><%= blog.likes.length %></span>
+        <% } %>
+        <button class="posts-options-comments"><span class="material-symbols-outlined">forum</span></button>
+        <% if(blog.comments.length > 0){ %>
+          <span class="posts-options-count comments-count"><%= blog.comments.length %></span>
+        <% } %>
+      </div>
+      <div class="posts-options-right">
+        <button class="save-btn"><span class="material-symbols-outlined">bookmark_add</span></button>
+        <% if(res.user && res.isAuthor) { %>
+          <a href="/blogs/edit/<%= blog._id %>"><button class="edit-btn"><span class="material-symbols-outlined">edit</span></button></a>
+          <button class="delete-btn" data-doc="<%= blog._id %>"><span class="material-symbols-outlined">ink_eraser</span></button>
+        <% } %>
+      </div>
+    </div>
+</div>
+
+<div class="comments content-no-bg">
+    <h3>Comments</h3>
+    <div class="comments-container">
+      <% comments.forEach(comment => { %>
+        <div class="comment">
+          <div class="comment-author">
+              <img src="/res/sample-profile-pic.jpg" class="profile-pic">
+              <p class="comment-author-name"><a href="/@<%= comment.user.username %>"><%= comment.user.fullName %></a> says</p>
+            <span class="dot">•</span><p class="comment-date"><%= new Date(comment.createdAt).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) %></p>
+          </div>
+          <p class="comment-body"><%= comment.content %></p>
+        </div>
+      <% }) %>
+    </div>
+    <div class="comment-form">
+      <h4>Leave a comment</h4>
+      <form class="form-comment-input" action="/blogs/<%= blog._id %>/comments" method="POST">
+        <textarea name="content" placeholder="Write a comment..." class="textarea-input"></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+</div>
+
+<% if(res.user?._id.toString() == blog.author.userId){ %>
+  <div class="popup-delete">
+      <div>
+        <p>Are you sure you want to erase this blog? This action cannot be undone at a later time.</p>
+        <div class="delete-btns">
+          <button class="delete-yes">Proceed</button>
+          <button class="delete-no">Cancel</button>
+        </div>
+      </div>
+  </div>
+
+  <script>
+    const deleteBtn = document.querySelector('.delete-btn');
+    const deleteYes = document.querySelector('.delete-yes');
+    const deleteNo = document.querySelector('.delete-no');
+    const popup = document.querySelector('.popup-delete');
+
+    deleteBtn.addEventListener('click', (e) => {
+        popup.classList.add('popup-delete-open');
+        document.body.classList.add('body-popup-open');
+    });
+
+    deleteNo.addEventListener('click', (e) => {
+        popup.classList.remove('popup-delete-open');
+        document.body.classList.remove('body-popup-open');
+    });
+
+    deleteYes.addEventListener('click', (e) => {
+        const endpoint = `/blogs/${deleteBtn.dataset.doc}`;
+
+        fetch(endpoint, {
+            method: 'DELETE',
+        })
+        .then(response => response.json())
+        .then(data => window.location.href = data.redirect)
+        .catch(err => console.log(err));
+    });
+  </script>
+<% } %>

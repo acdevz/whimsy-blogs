@@ -1,0 +1,32 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="settings content">
+    <div class="content-header">
+        <h2>Settings</h2>
+    </div>
+    <div class="content-tabs">
+        <a href="/me/settings" class="<%= !tab ? "active" : "" %>">General</a>
+        <a href="/me/settings?q=profile" class="<%= tab && tab === "profile" ? "active" : "" %>">Profile</a>
+        <a href="/me/settings?q=notifications" class="<%= tab && tab === "notifications" ? "active" : "" %>">Notifications</a>
+        <a href="/me/settings?q=subscription" class="<%= tab && tab === "subscription" ? "active" : "" %>">Subscription</a>
+    </div>
+    <% if(!tab){ %>
+        <div class="settings-section">
+            <p class="author-bio"></p>
+        </div>
+        <div class="settings-section">
+            <div class="profile-section-title"></div>
+        </div>
+    <% } else if(tab === "profile"){ %>
+        <div class="profile-section">
+            <div class="profile-section-title"></div>
+        </div>
+    <% } else if(tab === "notifications"){ %>
+        <div class="profile-section">
+        </div>
+    <% } else if(tab === "subscription"){ %>
+        <div class="profile-section">
+            <div class="profile-section-title"></div>
+        </div>
+    <% }%>
+</div>

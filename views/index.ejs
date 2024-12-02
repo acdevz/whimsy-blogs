@@ -1,0 +1,39 @@
+<%- include('./partials/header.ejs') %>
+
+<div class="blogs content">
+    <% if(res.user){ %>
+        <div class="content-tabs">
+            <a href="/blogs"><span class="material-symbols-outlined">add</span></a>
+            <a href="/blogs" class="<%= !tab ? "active" : "" %>">For you</a>
+            <a href="/blogs?feed=following" class="<%= tab && tab === "following" ? "active" : "" %>">Following</a>
+        </div>
+    <% } else { %>
+        <h2><span style="opacity: 0.6;">Latest</span> Posts</h2>
+    <% } %>
+    <div>
+    <% blogs && blogs.map((blog) => { %>
+        <div class="blog">
+            <p class="author"><a href="/@<%= blog.author.username %>"><img src="/res/sample-profile-pic.jpg" class="profile-pic"><%= blog.author.fullName %></a></p>
+            <h3><a href="/blogs/<%= blog.slug %>"><%= blog.title %></a></h3>
+            <p class="snippet"><%= blog.snippet %></p>
+            <p class="options">
+                <span class="timestamp"><%= blog.timestamp %></span>
+                <span><%= blog?.readTime %></span>
+            </p>
+        </div>
+    <% }) %>
+    </div>
+
+    <div class="pagination">
+        <div>
+            <% if ( nextPage ) { %>
+            <a href="/blogs?p=<%= nextPage %>"><i class="fa-solid fa-chevron-left"></i> Older Posts</a>
+            <% } %>
+        </div>
+        <div>
+            <% if ( prevPage ) { %>
+                <a href="/blogs?p=<%= prevPage %>">Latest Posts <i class="fa-solid fa-chevron-right"></i></a>
+            <% } %>
+        </div>
+    </div>
+</div>

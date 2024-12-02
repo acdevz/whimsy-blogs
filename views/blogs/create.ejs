@@ -1,0 +1,74 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="create-blog content">
+    <form class="create-blog-form" action="/blogs" method="POST">
+        <h2>Share a Story</h2>
+        <input type="text" class="input-title" name="title" placeholder="Title" autofocus>
+        <input type="text" class="input-snippet" name="snippet" placeholder="Excerpt">
+        <textarea class="textarea-content"></textarea>
+        <input type="hidden" class="input-processed-content" name="content">
+        <input type="hidden" class="input-status" name="status">
+        <% if(res.user.subscription.subscriptionType === "premium"){ %>
+            <div class="input-checkbox">
+                <input type="checkbox" name="premium">Premium ✨
+            </div>
+        <% } %>
+        <button class="submit-btn publish-btn" disabled>Publish</button>
+        <button class="submit-btn draft-btn" disabled>Save Draft</button>
+    </form>
+</div>
+
+<script>
+    const createBlogForm = document.querySelector('.create-blog-form');
+    const title = createBlogForm.querySelector('.input-title');
+    const snip = createBlogForm.querySelector('.input-snippet');
+    const body = createBlogForm.querySelector('.textarea-content');
+    const status = createBlogForm.querySelector('.input-status');
+    const publishBtn = createBlogForm.querySelector('.publish-btn');
+    const draftBtn = createBlogForm.querySelector('.draft-btn');
+    const blogProcessed = createBlogForm.querySelector('.input-processed-content');
+
+    body.addEventListener('input', () => {
+        body.style.height = body.scrollHeight + 'px';
+    });
+
+    createBlogForm.addEventListener('submit', () => {
+        blogProcessed.value = body.value.replace(/\n/g, '<br>');
+    });
+    publishBtn.addEventListener('click', () => {
+        status.value = 'published';
+        createBlogForm.submit();
+    })
+    draftBtn.addEventListener('click', () => {
+        status.value = 'draft';
+        createBlogForm.submit();
+    })
+
+    title.addEventListener('input', () => {
+        title.value ? title.value = title.value.toLowerCase().replace(/\b\w/g, s => s.toUpperCase()) : "";
+    });
+
+    snip.addEventListener('input', () => {
+        snip.value ? snip.value = sentenceCase(snip.value) : "";
+    });
+
+    createBlogForm.addEventListener('input', () => {
+        if (title.value && snip.value && body.value) {
+            publishBtn.removeAttribute('disabled');
+        }
+        else {
+            publishBtn.setAttribute('disabled', 'disabled');
+        }
+        if (title.value) {
+            draftBtn.removeAttribute('disabled');
+        }
+        else {
+            draftBtn.setAttribute('disabled', 'disabled');
+        }
+    });
+    function sentenceCase(str) {
+        return str.replace(/(^|\.\s+)([a-z])/g, (match, group1, group2) => {
+            return group1 + group2.toUpperCase();
+        });
+    }
+</script>

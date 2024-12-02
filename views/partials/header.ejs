@@ -1,0 +1,69 @@
+<nav class="nav">
+    <div class="nav-left-inline-top">
+        <div class="site-title">
+            <h1><a href="/">Whimsy Blogs</a></h1>
+        </div>
+        <div class="site-search">
+            <form class="search-form" action="/blogs/search" method="GET">
+                <button class="search-btn" type="submit" disabled><i class="fa-solid fa-search"></i></button>
+                <input class="search-bar" type="text" name="q" placeholder="Search blogs..." autocomplete="false">
+            </form>
+        </div>
+    </div>
+    <div class="nav-links">
+        <% if(!res.user) {%>
+            <a href="/blogs/signin">Write</a>
+            <a href="/blogs/signin">Sign in</a>
+            <a class="signin-btn" href="/blogs/signup">Get Started</a>
+        <% } %>
+        <% if(res.user) { %>
+            <a href="/blogs/create"><i class="fa-regular fa-pen-to-square"></i> Write</a>
+            <span class="profile-menu">
+                <a class="profile-btn">
+                    <span><%- res.user.fullName.split(' ')[0] %></span><span class="material-symbols-outlined">keyboard_arrow_down</span>
+                    <img src="/res/sample-profile-pic.jpg" alt="Profile Pic" class="profile-pic">
+                </a>
+                <div class="profile-options">
+                    <a href="/@<%= res.user.username %>">Profile</a>
+                    <a href="/me/settings">Settings</a>
+                    <a href="/users/signout">Sign Out</a>
+                </div>
+            </span>
+            <script>
+                const profileBtn = document.querySelector('.profile-btn');
+                const profileOptions = document.querySelector('.profile-options');
+                
+                profileBtn.addEventListener('click', () => {
+                    profileOptions.classList.toggle('show');
+                });
+
+                window.addEventListener('click', (e) => {
+                    if(!e.target.matches('.profile-btn *')) {
+                        profileOptions.classList.remove('show');
+                    }
+                })
+            </script>
+        <% } %>
+    </div>
+</nav>
+<div class="sub-nav">
+    <p>Become a premium member and get access to exclusive features! ✨</p>
+</div>
+<script>
+    window.onscroll = () => {scrollFunction()};
+    function scrollFunction() {
+        if (document.body.scrollTop > 125  || document.documentElement.scrollTop > 125) {
+            document.querySelector(".nav").classList.add("nav-sticky");
+        } else {
+            document.querySelector(".nav").classList.remove("nav-sticky");
+        }
+    }
+    const searchBar = document.querySelector('.search-bar');
+    const searchBtn = document.querySelector('.search-btn');
+    searchBar.addEventListener('input', () => {
+        searchBar.value ? searchBtn.disabled = false : searchBtn.disabled = true;
+    })
+    searchBar.addEventListener('focus', () => {
+        searchBar.value ? searchBtn.disabled = false : searchBtn.disabled = true;
+    })
+</script>

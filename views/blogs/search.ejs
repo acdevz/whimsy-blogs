@@ -1,0 +1,55 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="search content">
+    <div class="content-header">
+        <h2><span style="opacity: 0.6;">Results for </span><%= searchTerm %></h2>     
+    </div>
+    <div class="content-tabs">
+        <a href="/blogs/search?q=<%= searchTerm.replace(/\s/, "+") %>" class="<%= !tab ? "active" : "" %>">Stories</a>
+        <a href="/blogs/search/users?q=<%= searchTerm.replace(/\s/, "+") %>" class="<%= tab && tab === "users" ? "active" : "" %>">People</a>
+    </div>
+    <div>
+    <% !tab && blogs && blogs.map((blog) => { %>
+        <div class="blog">
+            <p class="author"><a href="/@<%= blog.author.username %>"><img src="/res/sample-profile-pic.jpg" class="profile-pic"><%= blog.author.fullName %></a></p>
+            <h3><a href="/blogs/<%= blog.slug %>"><%= blog.title %></a></h3>
+            <p class="snippet"><%= blog.snippet %></p>
+            <p class="options">
+                <span class="timestamp"><%= blog.timestamp %></span>
+                <span><%= blog?.readTime %></span>
+            </p>
+        </div>
+    <% }) %>
+    <% tab === "users" && users && users.map((user) => { %>
+        <div class="user">
+            <img src="/res/sample-profile-pic.jpg" class="user-profile-pic">
+            <div class="user-info">
+                <p class="user-info-name"><a href="/@<%= user.username %>"><%= user.fullName %></a></p>
+                <p class="user-info-bio"><%= user.bio %></p>
+            </div>
+            <div class="user-action">
+                <button>follow</button>
+            </div>
+        </div>
+    <% }) %>
+    </div>
+        
+    <div class="pagination">
+        <div>
+            <% if ( prevPage ) { %>
+                <form action="/blogs/search?p=<%= prevPage %>" method="POST">
+                    <input type="hidden" name="search" value="<%= searchTerm %>">
+                    <button type="submit"><a><i class="fa-solid fa-chevron-left"></i> Previous Page</a></button>
+                </form>
+            <% } %>
+        </div>
+        <div>
+            <% if ( nextPage ) { %>
+                <form action="/blogs/search?p=<%= nextPage %>" method="POST">
+                    <input type="hidden" name="search" value="<%= searchTerm %>">
+                    <button type="submit"><a>Next Page <i class="fa-solid fa-chevron-right"></i></a></button>
+                </form>
+            <% } %>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="signin content">
+    <form class="signin-form" action="/users/signin" method="POST">
+        <h2>Continue Your Story</h2>
+        <div class="form">
+            <div class="form-illus"></div>
+            <div class="form-elements">
+                <div>
+                    <% if(error.message) {%>
+                        <div class="error-msg">*<%= error.message %></div>
+                    <% } %>
+                    <label for="email">Your enchanted email.</label>
+                    <input type="email" class="input-email" id="email" name="email" autofocus>
+                    <label for="password">Your secret passphrase.</label>
+                    <input type="password" class="input-password" id="password" name="password">
+                    <button type="submit" class="btn-submit" disabled>Sign in</button>
+                    <div class="sign-other-option">
+                        Don't have an account? <a href="/blogs/signup">Sign up</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    const signinForm = document.querySelector('.signin-form');
+    const email = signinForm.querySelector('.input-email');
+    const password = signinForm.querySelector('.input-password');
+    const button = signinForm.querySelector('button[type="submit"]');
+    
+    signinForm.addEventListener('input', () => {
+        email.value && password.value ? button.disabled = false : button.disabled = true;
+    });
+</script>
